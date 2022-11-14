@@ -67,6 +67,5 @@ class BaseFetcher:
                 yield proxy
             logger.info(f'{url} website crawling completed, number of proxies: {count}')
 
-
     def parse(self, html: typing.Optional[str]):
         pass

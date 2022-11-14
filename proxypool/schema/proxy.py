@@ -9,9 +9,7 @@ class Proxy:
             self,
             ip: typing.Optional[str],
             port: typing.Optional[int],
-            protocol: typing.Optional[
-                typing.Literal['http', 'https']
-            ] = 'http',
+            protocol: typing.Optional[str] = 'http',
             score: typing.Optional[int] = PROXY_SCORE_INIT,
             delay: typing.Optional[float] = 9999,
             success_count: typing.Optional[int] = 0

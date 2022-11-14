@@ -51,13 +51,11 @@ class RedisClient:
 
     def get_all(
             self,
-            state: typing.Optional[
-                typing.Literal['valid', 'invalid', 'all']
-            ] = 'valid'
+            state: typing.Optional[str] = 'valid'
     ) -> [Proxy]:
         """获取所有代理的信息
 
-        :param state:
+        :param state: ['valid', 'invalid', 'all']
         :return:
         """
         all_proxy = self.db.hvals(REDIS_KEY)
@@ -70,30 +68,26 @@ class RedisClient:
 
     def count(
             self,
-            state: typing.Optional[
-                typing.Literal['valid', 'invalid', 'all']
-            ] = 'valid',
+            state: typing.Optional[str] = 'valid',
 
     ) -> int:
         """统计代理数量
 
-        :param state:
+        :param state: ['valid', 'invalid', 'all']
         :return:
         """
         return len(self.get_all(state=state))
 
     def random(
             self,
-            state: typing.Optional[
-                typing.Literal['valid', 'invalid', 'all']
-            ] = 'valid',
+            state: typing.Optional[str] = 'valid',
             max_delay: typing.Optional[float] = 9999,
             min_success_count: typing.Optional[int] = 1,
             number: typing.Optional[int] = 1
     ) -> [Proxy]:
         """获取指定数量的随机代理
 
-        :param state:
+        :param state: ['valid', 'invalid', 'all']
         :param max_delay: 代理的最大延时
         :param min_success_count: 代理最近检测成功的最小次数
         :param number: 代理数量
@@ -107,16 +101,14 @@ class RedisClient:
 
     def pop(
             self,
-            state: typing.Optional[
-                typing.Literal['valid', 'invalid', 'all']
-            ] = 'valid',
+            state: typing.Optional[str] = 'valid',
             max_delay: typing.Optional[float] = 9999,
             min_success_count: typing.Optional[int] = 1,
             number: typing.Optional[int] = 1
     ) -> [Proxy]:
         """弹出一个有效的随机代理
 
-        :param state:
+        :param state: ['valid', 'invalid', 'all']
         :param max_delay: 代理的最大延时
         :param min_success_count: 代理最近检测成功的最小次数
         :param number: 代理数量
