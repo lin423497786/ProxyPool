@@ -14,6 +14,7 @@
 
 ```bash
 git clone https://github.com/lin423497786/ProxyPool.git
+cd ProxyPool
 ```
 
 * 安装依赖:
@@ -50,7 +51,7 @@ API_PORT = 9999
 * 启动项目:
 
 ```bash
-cd proxypool; python3 scheduler.py
+python3 scheduler.py
 ```
 
 
