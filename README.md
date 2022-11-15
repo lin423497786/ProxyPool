@@ -51,7 +51,7 @@ API_PORT = 9999
 * 启动项目:
 
 ```bash
-python3 scheduler.py
+python3 run.py
 ```
 
 
