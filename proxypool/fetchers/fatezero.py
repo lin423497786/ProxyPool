@@ -17,12 +17,3 @@ class FatezeroFetcher(BaseFetcher):
                     port=proxy_info_dict['port'],
                     protocol=proxy_info_dict['type']
                 )
-
-
-if __name__ == '__main__':
-    from proxypool.storages.redisClient import RedisClient
-    fetcher = FatezeroFetcher()
-    client = RedisClient('192.168.174.128')
-    for i in fetcher.fetch():
-        client.add(i)
-    print(client.count(state='all'))

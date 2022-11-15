@@ -18,12 +18,3 @@ class TaiyanghttpFetcher(BaseFetcher):
             port = tr.xpath('./div[contains(@class, "td")]/text()')[1]
             protocol = tr.xpath('./div[contains(@class, "td")]/text()')[5].lower()
             yield Proxy(ip=ip, port=port, protocol=protocol)
-
-
-if __name__ == '__main__':
-    from proxypool.storages.redisClient import RedisClient
-    fetcher = TaiyanghttpFetcher()
-    client = RedisClient('192.168.174.128')
-    for i in fetcher.fetch():
-        client.add(i)
-    print(client.count(state='all'))

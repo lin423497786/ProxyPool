@@ -29,12 +29,3 @@ class DaiLi89Fetcher(BaseFetcher):
             ip = tr.xpath('./td/text()')[0].strip()
             port = tr.xpath('./td/text()')[1].strip()
             yield Proxy(ip=ip, port=port)
-
-
-if __name__ == '__main__':
-    from proxypool.storages.redisClient import RedisClient
-    fetcher = DaiLi89Fetcher()
-    client = RedisClient('192.168.19.128')
-    for i in fetcher.fetch():
-        client.add(i)
-    print(client.count(state='all'))

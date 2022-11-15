@@ -28,13 +28,3 @@ class FreeproxyFetcher(BaseFetcher):
             port = tr.xpath('./td/text()')[1]
             protocol = tr.xpath('./td/text()')[2].lower()
             yield Proxy(ip=ip, port=port, protocol=protocol)
-
-
-if __name__ == '__main__':
-    from proxypool.storages.redisClient import RedisClient
-    fetcher = FreeproxyFetcher()
-    client = RedisClient('192.168.174.128')
-    for i in fetcher.fetch():
-        print(i)
-        client.add(i)
-    print(client.count(state='all'))
