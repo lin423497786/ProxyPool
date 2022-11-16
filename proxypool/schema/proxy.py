@@ -10,10 +10,10 @@ class Proxy:
             ip: typing.Optional[str],
             port: typing.Optional[int],
             protocol: typing.Optional[str] = 'http',
+            source: typing.Optional[str] = 'unknown',
             score: typing.Optional[int] = PROXY_SCORE_INIT,
             delay: typing.Optional[float] = 9999,
             success_count: typing.Optional[int] = 0
-
     ):
         self._ip = ip
         self._port = port
@@ -27,6 +27,8 @@ class Proxy:
         # 最近连续检测连接成功的次数
         self._success_count = success_count
 
+        self._source = source
+
     @property
     def ip(self):
         return self._ip
@@ -38,6 +40,14 @@ class Proxy:
     @property
     def protocol(self):
         return self._protocol
+
+    @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        self._source = value
 
     @property
     def score(self):
@@ -78,6 +88,7 @@ class Proxy:
             'ip': self.ip,
             'port': self.port,
             'protocol': self.protocol,
+            'source': self.source,
             'delay': self.delay,
             'score': self.score,
             'success_count': self.success_count

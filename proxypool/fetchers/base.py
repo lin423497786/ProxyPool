@@ -64,6 +64,7 @@ class BaseFetcher:
             for proxy in self.parse(html_text):
                 count += 1
                 logger.debug(f'fetched proxy "{proxy.to_string()}" from "{url}"')
+                proxy.source = url
                 yield proxy
             logger.info(f'{url} website crawling completed, number of proxies: {count}')
 
