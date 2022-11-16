@@ -44,7 +44,7 @@ PROXY_SCORE_MIN = 0
 PROXY_SCORE_INIT = 3
 
 # 每隔多少秒调用代理爬取进程
-FETCH_CYCLE = 1800
+FETCH_CYCLE = 3600
 
 # 每隔多少秒调用代理检测进程
 CHECK_CYCLE = 60
