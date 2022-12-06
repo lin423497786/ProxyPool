@@ -11,7 +11,7 @@ from proxypool.utils.log import logger
 from proxypool.schema import Proxy
 from proxypool.storages.redisClient import RedisClient
 from proxypool.setting import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, ONLY_ANONYMOUS_PROXY, \
-    CHECK_TIMEOUT, CHECK_URL, CHECK_VALID_STATUS, CHECK_BATCH_NUM
+    CHECK_TIMEOUT, CHECK_URL, CHECK_VALID_STATUS, CHECK_BATCH_NUM, ENABLE_LOCATION_QUERY
 
 EXCEPTIONS = (
     ClientProxyConnectionError,
@@ -36,7 +36,6 @@ class Checker:
         """
         self.db = RedisClient(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
         self.semaphore = asyncio.Semaphore(CHECK_BATCH_NUM)
-        self.loop = asyncio.get_event_loop()
 
     async def check(self, proxy: Proxy):
         """
@@ -68,12 +67,32 @@ class Checker:
                         if response.status in CHECK_VALID_STATUS:
                             end_time = time.time()
                             proxy.delay = round(end_time - begin_time, 2)
+                            # 获取ip所在的归属地
+                            try:
+                                if ENABLE_LOCATION_QUERY:
+                                    url = f'https://ip.taobao.com/outGetIpInfo?ip={proxy.ip}&accessKey=alibaba-inc'
+                                    async with session.get(url, timeout=CHECK_TIMEOUT) as location_response:
+                                        location_info = await location_response.json()
+                                        if location_info.get('code') == 0:
+                                            country = location_info['data']['country']
+                                            if location_info['data']['city'] != 'XX':
+                                                city = location_info['data']['city']
+                                            else:
+                                                city = ''
+                                            if location_info['data']['isp'] != 'XX':
+                                                isp = location_info['data']['isp']
+                                            else:
+                                                isp = ''
+                                            proxy.location = country + city + isp
+                            except:
+                                proxy.location = ''
+
                             self.db.max(proxy)
                             logger.debug(f'proxy {proxy.to_string()} is valid, set max score')
                         else:
                             self.db.decrease(proxy)
                             logger.debug(f'proxy {proxy.to_string()} is invalid, decrease score')
-                except:
+                except EXCEPTIONS as e:
                     self.db.decrease(proxy)
                     logger.debug(f'proxy {proxy.to_string()} is invalid, decrease score')
 
@@ -82,20 +101,18 @@ class Checker:
         check main method
         :return:
         """
-        # event loop of aiohttp
+        loop = asyncio.get_event_loop()
         logger.info('stating checker')
         count = self.db.count(state='all')
         logger.info(f'{count} proxies to check')
         tasks = []
         for p in self.db.get_all(state='all'):
-            tasks.append(asyncio.ensure_future(self.check(p)))
+            if p.protocol.lower() == 'http':
+                tasks.append(loop.create_task(self.check(p)))
 
         if tasks:
-            self.loop.run_until_complete(asyncio.wait(tasks))
+            loop.run_until_complete(asyncio.wait(tasks))
         logger.info('end checker')
-
-    def __del__(self):
-        self.loop.close()
 
 
 if __name__ == '__main__':

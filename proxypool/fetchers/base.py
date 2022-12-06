@@ -50,7 +50,7 @@ class BaseFetcher:
         else:
             logger.error(
                 f'failed to crawl proxy information from url {url},'
-                f' please check if target url is valid or network issue'
+                f' please check the target url is valid or network issue'
             )
             return
 

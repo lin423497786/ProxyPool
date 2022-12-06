@@ -21,7 +21,7 @@ API_PORT = 9999
 # 只保存高匿名代理
 ONLY_ANONYMOUS_PROXY = False
 
-# 检测超时时间
+# 爬取超时时间
 FETCH_TIMEOUT = 10
 
 # 检测超时时间
@@ -39,9 +39,9 @@ CHECK_BATCH_NUM = 200
 # 代理的分数, 刚爬取下来的代理的分数将赋予PROXY_SCORE_INIT
 # 检测失败分数减1,当分数低于PROXY_SCORE_MIN时候，该代理从数据库中删除
 # 检测成功分数提高到PROXY_SCORE_MAX
-PROXY_SCORE_MAX = 10
+PROXY_SCORE_MAX = 50
 PROXY_SCORE_MIN = 0
-PROXY_SCORE_INIT = 3
+PROXY_SCORE_INIT = 10
 
 # 每隔多少秒调用代理爬取进程
 FETCH_CYCLE = 12 * 3600
@@ -50,13 +50,16 @@ FETCH_CYCLE = 12 * 3600
 CHECK_CYCLE = 60
 
 # 是否开启代理爬取进程
-ENABLE_FETCHER = True
+ENABLE_FETCHER = False
 
 # 是否开启代理检测进程
 ENABLE_CHECKER = True
 
 # 是否开api服务进程
 ENABLE_SERVER = True
+
+# 是否开启对ip的归属地查询
+ENABLE_LOCATION_QUERY = True
 
 # 日志级别
 LOG_LEVEL = logging.INFO

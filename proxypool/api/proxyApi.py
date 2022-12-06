@@ -4,6 +4,8 @@ from proxypool.setting import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 
 app = Flask(__name__)
 
+# 使通过jsonify返回的中文显示正常，否则显示为ASCII码
+app.config["JSON_AS_ASCII"] = False
 
 api_list = [
     {

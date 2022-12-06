@@ -10,6 +10,7 @@ class Proxy:
             ip: typing.Optional[str],
             port: typing.Optional[int],
             protocol: typing.Optional[str] = 'http',
+            location: typing.Optional[str] = '',
             source: typing.Optional[str] = 'unknown',
             score: typing.Optional[int] = PROXY_SCORE_INIT,
             delay: typing.Optional[float] = 9999,
@@ -17,10 +18,12 @@ class Proxy:
     ):
         self._ip = ip
         self._port = port
-        if protocol in ('http', 'https'):
-            self._protocol = protocol
+        if protocol.lower() == 'http' or protocol.lower() == 'https':
+            self._protocol = protocol.lower()
         else:
             self._protocol = 'http'
+
+        self._location = location
         self._score = score
         self._delay = delay
 
@@ -40,6 +43,14 @@ class Proxy:
     @property
     def protocol(self):
         return self._protocol
+
+    @property
+    def location(self):
+        return self._location
+
+    @location.setter
+    def location(self, value):
+        self._location = value
 
     @property
     def source(self):
@@ -88,6 +99,7 @@ class Proxy:
             'ip': self.ip,
             'port': self.port,
             'protocol': self.protocol,
+            'location': self.location,
             'source': self.source,
             'delay': self.delay,
             'score': self.score,
