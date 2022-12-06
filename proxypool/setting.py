@@ -50,7 +50,7 @@ FETCH_CYCLE = 12 * 3600
 CHECK_CYCLE = 60
 
 # 是否开启代理爬取进程
-ENABLE_FETCHER = False
+ENABLE_FETCHER = True
 
 # 是否开启代理检测进程
 ENABLE_CHECKER = True
