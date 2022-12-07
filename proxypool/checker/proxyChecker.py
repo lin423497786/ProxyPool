@@ -68,8 +68,8 @@ class Checker:
                             end_time = time.time()
                             proxy.delay = round(end_time - begin_time, 2)
                             # 获取ip所在的归属地
-                            try:
-                                if ENABLE_LOCATION_QUERY:
+                            if ENABLE_LOCATION_QUERY and proxy.location == '':
+                                try:
                                     url = f'https://ip.taobao.com/outGetIpInfo?ip={proxy.ip}&accessKey=alibaba-inc'
                                     async with session.get(url, timeout=CHECK_TIMEOUT) as location_response:
                                         location_info = await location_response.json()
@@ -84,15 +84,15 @@ class Checker:
                                             else:
                                                 isp = ''
                                             proxy.location = country + city + isp
-                            except:
-                                proxy.location = ''
+                                except:
+                                    proxy.location = ''
 
                             self.db.max(proxy)
                             logger.debug(f'proxy {proxy.to_string()} is valid, set max score')
                         else:
                             self.db.decrease(proxy)
                             logger.debug(f'proxy {proxy.to_string()} is invalid, decrease score')
-                except EXCEPTIONS as e:
+                except EXCEPTIONS:
                     self.db.decrease(proxy)
                     logger.debug(f'proxy {proxy.to_string()} is invalid, decrease score')
 
@@ -111,7 +111,8 @@ class Checker:
                 tasks.append(loop.create_task(self.check(p)))
 
         if tasks:
-            loop.run_until_complete(asyncio.wait(tasks))
+            # loop.run_until_complete(asyncio.wait(tasks))
+            loop.run_until_complete(asyncio.gather(*tasks, return_exceptions=True))
         logger.info('end checker')
 
 
